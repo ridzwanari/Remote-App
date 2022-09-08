@@ -1,0 +1,421 @@
+import { Alert, Modal, StyleSheet,SafeAreaView, Text, Pressable, View ,Image,TextInput,FlatList,TouchableOpacity} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect,useState } from "react";
+import { out } from "react-native/Libraries/Animated/Easing";
+import { SwipeListView } from "react-native-swipe-list-view";
+
+
+
+
+const CANVAS = [
+  {
+   
+    name:'Canvas',
+    "id":"1"
+  },
+  
+
+];
+
+const IT = ({ id }) => (
+
+  <View style={styles.item}>
+
+    <Text style={styles.title}>{id}</Text>
+
+  </View>
+);
+
+
+
+
+function App() {
+
+
+
+
+   const [textInputValue,settextInputValue]=useState('');
+
+
+   const [value,setvalue]=useState([]) 
+  
+   const [modalVisible, setModalVisible] = useState(false);
+
+
+   const closeRow = (rowMap, rowKey) => {
+    if (rowMap[rowKey]) {
+        rowMap[rowKey].closeRow();
+    }
+};
+
+   const deleteRow = (rowMap, rowKey) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...value];
+    const prevIndex = listData.findIndex(item => item.value === rowKey);
+    newData.splice(prevIndex, 1);
+    setListData(newData);
+};    
+
+const renderHiddenItem = (value, rowMap) => (
+  <View style={styles.rowBack}>
+      <Text>Left</Text>
+      <TouchableOpacity
+          style={[styles.backRightBtn, styles.backRightBtnLeft]}
+          onPress={() => closeRow(rowMap, item.value)}
+      >
+          <Text style={styles.backTextWhite}>Close</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+          style={[styles.backRightBtn, styles.backRightBtnRight]}
+          onPress={() => deleteRow(rowMap, item.value)}
+      >
+          <Text style={styles.backTextWhite}>Delete</Text>
+      </TouchableOpacity>
+  </View>
+);
+
+
+
+   const renderIT = ({item, index}) => (
+  
+ 
+ 
+    <TextInput style={styles.title}> {item.name} {item.id} {value}</TextInput>
+
+          )
+ 
+  
+
+  const saveValue = ()=>{
+    var temp=[]
+    var output = [] 
+
+    if(
+
+      value.length!=0
+
+    ){
+      temp=value
+    }
+    if (textInputValue){
+       
+    
+
+ temp.push(textInputValue)
+ output = JSON.stringify(temp);
+
+ AsyncStorage.setItem('itemList', output);
+    settextInputValue('');
+
+    alert('Data Saved');
+    }
+    else{
+      alert('Please fill data');
+    }
+      console.log("textinput "+ output)
+      setvalue(temp)
+  }
+  
+
+  
+
+  const getItemList = async()=>{
+    try{
+      value.push(textInputValue);
+
+      const output=JSON.stringify(textInputValue);
+
+      await AsyncStorage.setItem('itemList',output);
+
+      setvalue(output);
+
+
+      alert('Data Is Added');
+
+    } catch (err) {
+
+      console.log(err);
+    }
+  };
+    
+  
+
+  useEffect(() => {
+    // AsyncStorage.getItem('any_key_here')
+    // .then((value)=>{
+    //  alert(value);
+     
+    // })
+    console.log(
+      
+      "tittle"+JSON.stringify(value)
+
+    )
+    AsyncStorage.getItem('itemList')
+
+    .then((value)=>{
+
+                    console.log('value' +JSON.parse(value))
+      
+      setvalue(JSON.parse(value))
+      
+
+    })
+
+  }, [])
+
+  
+
+
+ return (
+  
+
+ <View>
+
+     <View style={{flexDirection:'row',alignSelf:'center'}}>
+
+        <Text  style={{fontWeight:'700', fontSize:24 }}>
+
+           My Remote
+
+         </Text>
+
+            <Pressable style={{left:70 }} disabled={ value.length!=3? true : false}
+ 
+              onPress={() => setModalVisible(true)}
+            >
+          {/* <Text style={{color:value.length!=3 ? 'green' : 'red',fontSize:30}}>+ </Text> */}
+
+              <Image source={   value.length!=8? require('./Image/plus.png'):require('./Image/remove.png')}/>
+
+            </Pressable>
+
+      </View>
+
+  
+  <View style={styles.centeredView}>
+
+    <Modal
+
+  animationType="slide"
+  transparent={true}
+  visible={modalVisible}
+
+ 
+>
+  
+  <View style={styles.centeredView}>
+
+    <View style={styles.modalView}>
+
+      <Text style={{color:'white'}}>Name :</Text>
+
+          <TextInput
+           
+           placeholder="Name"
+          value={textInputValue}
+          onChangeText={(data)=>settextInputValue(data)}
+          underlineColorAndroid='transparent'
+          style={styles.Input}
+          />
+
+            <TouchableOpacity
+
+              style={styles.buttonStyle}
+              onPress={saveValue}
+            >
+
+              <Text style={styles.buttonTextStyle}>
+              Save Value
+              </Text>
+
+       
+            </TouchableOpacity>
+            
+            
+
+             <Text style={styles.textStyle}>
+
+               {value}
+
+              </Text>
+
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+
+                     <Text style={styles.textStyle}>Hide</Text>
+
+                 </Pressable>
+     </View>
+    </View>
+  </Modal>
+
+</View>
+ 
+
+<View style={{backgroundColor:'red',height:550}}>
+    {/* <FlatList  style={{backgroundColor:'white'}}
+        data={value}
+    
+        renderItem={renderIT}
+      
+      
+      /> */}
+     
+
+      <View style={styles.list}>
+      
+
+        {value.map((item, index) => {
+          return (
+     
+            
+            <Text style={{marginVertical: 10 , color:'white'}} key={index}>
+              {index+1} {item}
+            </Text>
+          );
+        })}
+      </View>
+
+ </View>
+  
+</View>
+
+  )
+  
+ 
+}
+ 
+
+
+
+
+
+
+const styles = StyleSheet.create({
+centeredView: {
+flex: 1,
+justifyContent: "center",
+alignItems: "center",
+
+
+},
+
+list: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+modalView: {
+margin: 20,
+backgroundColor:"pink",
+padding: 35,
+alignItems: "center",
+shadowColor: "#000",
+shadowOffset: {
+  width: 0,
+  height: 2
+},
+shadowOpacity: 0.25,
+shadowRadius: 4,
+elevation: 5
+},
+button: {
+borderRadius: 20,
+padding: 10,
+elevation: 2,
+marginTop:40,
+},
+buttonOpen: {
+backgroundColor: "#F194FF",
+},
+buttonClose: {
+backgroundColor: "#2196F3",
+},
+textStyle: {
+color: "white",
+fontWeight: "bold",
+textAlign: "center"
+},
+modalText: {
+marginBottom: 15,
+textAlign: "center",
+color:"black"
+
+},
+Input:{
+  textAlign:"center",
+  height:50,
+  width:200,
+  borderWidth:1,
+  color:"white"
+},
+
+buttonStyle:{
+  fontSize:16,
+  color:'white',
+  backgroundColor:'black',
+  padding:5,
+  marginTop:10,
+  minWidth:150,
+  height:60,
+  justifyContent:'center'
+},
+
+buttonTextStyle:{
+  padding:5,
+  color:'white',
+  textAlign:'center',
+  fontSize:15,
+},
+
+textStyle:{
+  padding:10,
+  textAlign:'center'
+
+},
+
+item: {
+  backgroundColor: '#f9c2ff',
+  padding: 20,
+  marginVertical: 8,
+  marginHorizontal: 16,
+},
+title: {
+  fontSize: 32,
+  color:'blue'
+},
+
+rowBack: {
+  alignItems: 'center',
+  backgroundColor: '#DDD',
+  flex: 1,
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  paddingLeft: 15,
+},
+backRightBtn: {
+  alignItems: 'center',
+  bottom: 0,
+  justifyContent: 'center',
+  position: 'absolute',
+  top: 0,
+  width: 75,
+},
+backRightBtnLeft: {
+  backgroundColor: 'blue',
+  right: 75,
+},
+backRightBtnRight: {
+  backgroundColor: 'red',
+  right: 0,
+},
+
+});
+
+
+
+export default App

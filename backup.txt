@@ -1,0 +1,78 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState,useEffect} from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  StatusBar,
+  Dimensions,
+} from 'react-native';
+import  {NavigationContainer} from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+
+import Intro from './screens/Intro';
+import NoteScreen from './screens/NoteScreen';
+import NoteDetail from './screens/NoteDetail'
+import SearchBar from './screens/Searchbar';
+
+
+const Stack = createNativeStackNavigator();
+
+ function App(){
+
+//   const [user, setUser] = useState({});
+//   const findUser = async () => {
+//   const result = await AsyncStorage.getItem('user');
+//   if (result!==null){
+//   setUser(JSON.parse(result))
+//   }
+// };
+
+  
+//   useEffect(() => {
+//     findUser();
+  
+//   }, []);
+
+ 
+
+// const renderNoteScreen = props => <NoteScreen {...props} user={user} />;
+
+
+//   if (!user.name) return<Intro onFinish={findUser}/>
+
+//   else nu
+  return
+  (
+  //  < <NavigationContainer>
+  
+  //       <Stack.Navigator
+  //         screenOptions={{ headerTitle: '', headerTransparent: true }}
+  //         >
+        
+  //         <Stack.Screen component={renderNoteScreen} name='NoteScreen' />
+  //         <Stack.Screen component={NoteDetail} name='NoteDetail' />
+  //       </Stack.Navigator>
+    
+  //   </NavigationContainer>>
+
+  <View>
+    <Text>
+      hi
+    </Text>
+  </View>
+  );
+}
+
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+export default App
